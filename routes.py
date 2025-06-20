@@ -103,3 +103,41 @@ def get_user_info():
 def static_files(filename):
     """Serve static files"""
     return send_from_directory('static', filename)
+
+    from flask import request, jsonify
+from models import db, UserFavorite, User
+from datetime import datetime
+
+# Temporary fixed user ID (until Google Auth is added)
+FIXED_USER_ID = "test-user-001"
+
+@app.route("/favorite", methods=["POST"])
+def favorite_quote():
+    data = request.get_json()
+
+    quote_id = data.get("quote_id")
+    if not quote_id:
+        return jsonify({"error": "Missing quote_id"}), 400
+
+    # Check if user already exists
+    user = User.query.get(FIXED_USER_ID)
+    if not user:
+        user = User(id=FIXED_USER_ID, email="demo@example.com", first_name="Test", last_name="User")
+        db.session.add(user)
+        db.session.commit()
+
+    # Check if this quote is already favorited
+    existing = UserFavorite.query.filter_by(user_id=FIXED_USER_ID, quote_id=quote_id).first()
+    if existing:
+        return jsonify({"message": "Quote already favorited"}), 200
+
+    # Create the new favorite
+    new_favorite = UserFavorite(
+        user_id=FIXED_USER_ID,
+        quote_id=quote_id,
+        created_at=datetime.now()
+    )
+    db.session.add(new_favorite)
+    db.session.commit()
+
+    return jsonify({"message": "Quote favorited!"}), 201
