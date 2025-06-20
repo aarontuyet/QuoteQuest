@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
 
 
-# User model for Replit Auth
+# User model for Google Auth (or future authentication system)
 class User(UserMixin, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.String, primary_key=True)
@@ -21,20 +21,6 @@ class User(UserMixin, db.Model):
 
     # Relationship to favorites
     favorites = db.relationship('UserFavorite', back_populates='user', cascade='all, delete-orphan')
-
-
-# OAuth model for Replit Auth
-class OAuth(OAuthConsumerMixin, db.Model):
-    user_id = db.Column(db.String, db.ForeignKey(User.id))
-    browser_session_key = db.Column(db.String, nullable=False)
-    user = db.relationship(User)
-
-    __table_args__ = (UniqueConstraint(
-        'user_id',
-        'browser_session_key',
-        'provider',
-        name='uq_user_browser_session_key_provider',
-    ),)
 
 
 # User favorites model
