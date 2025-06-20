@@ -3,6 +3,7 @@ import logging
 from flask import Flask, render_template, jsonify, send_from_directory, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
+from flask_login import LoginManager 
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 # Configure logging
@@ -17,6 +18,8 @@ db = SQLAlchemy(model_class=Base)
 
 # Create Flask app
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev-secret-key")
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
@@ -34,7 +37,11 @@ with app.app_context():
 
 # Import and register auth blueprint
 from routes import *  # Import all routes
+from models import User  # ✅ Needed to load users from DB
 
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.get(User, user_id)
 
 # Make session permanent
 @app.before_request
