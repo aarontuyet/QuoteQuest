@@ -109,7 +109,7 @@ body::before {
 .quote-card {
     background: rgba(10, 10, 15, 0.9);
     border: 3px solid transparent;
-    min-height: 350px;
+    min-height: 100px;
     position: relative;
     transition: all 0.3s ease;
 }
