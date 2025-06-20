@@ -691,3 +691,31 @@ console.log('Keyboard shortcuts:');
 console.log('  ← Previous quote');
 console.log('  → Next quote');
 console.log('  Space: Random quote');
+
+// User Login for OAuth recommended by chatGPT
+document.addEventListener('DOMContentLoaded', function () {
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+    const userSection = document.getElementById('user-section');
+    const authSection = document.getElementById('auth-section');
+
+    fetch('/api/user_info')
+        .then(res => res.json())
+        .then(data => {
+            if (data.is_authenticated) {
+                loginBtn.classList.add('d-none');
+                userSection.classList.remove('d-none');
+            } else {
+                loginBtn.classList.remove('d-none');
+                userSection.classList.add('d-none');
+            }
+        });
+
+    loginBtn.addEventListener('click', () => {
+        window.location.href = '/login/google';
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        window.location.href = '/logout';
+    });
+});

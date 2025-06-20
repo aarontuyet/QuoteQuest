@@ -1,8 +1,43 @@
-from flask import jsonify, render_template, request, send_from_directory
-from flask_login import current_user
-from app import app, db
-from models import UserFavorite
+##original pre 20250620
+##from flask import jsonify, render_template, request, send_from_directory
+##from flask_login import current_user
+##from app import app, db
+##from models import UserFavorite
 
+##--------------------new
+from flask import jsonify, render_template, request, send_from_directory, redirect, url_for, session
+from flask_login import LoginManager, login_user, logout_user, current_user, login_required
+from app import app, db
+from models import User, UserFavorite
+from authlib.integrations.flask_client import OAuth
+import os
+
+# --- Login Manager Setup ---
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "google_login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+# --- OAuth Setup ---
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=os.environ.get("GOOGLE_CLIENT_ID"),
+    client_secret=os.environ.get("GOOGLE_CLIENT_SECRET"),
+    access_token_url='https://oauth2.googleapis.com/token',
+    authorize_url='https://accounts.google.com/o/oauth2/auth',
+    client_kwargs={
+        'scope': 'openid email profile'
+    },
+    api_base_url='https://www.googleapis.com/oauth2/v1/',
+    userinfo_endpoint='https://www.googleapis.com/oauth2/v3/userinfo',
+)
+
+
+##--------------------end new
 
 @app.route('/')
 def index():
@@ -97,6 +132,45 @@ def get_user_info():
         })
     else:
         return jsonify({"authenticated": False})
+
+##------------------new
+from flask import redirect, url_for
+from flask_login import login_user, logout_user
+
+@app.route('/login')
+def google_login():
+    redirect_uri = url_for('google_authorize', _external=True)
+    return google.authorize_redirect(redirect_uri)
+
+@app.route('/authorize')
+def google_authorize():
+    try:
+        token = google.authorize_access_token()
+        user_info = google.parse_id_token(token)
+    except Exception as e:
+        app.logger.error(f"Google login failed: {e}")
+        return redirect(url_for('index'))
+
+    # Look for existing user or create a new one
+    user = User.query.get(user_info['sub'])
+    if not user:
+        user = User(
+            id=user_info['sub'],
+            email=user_info.get('email'),
+            first_name=user_info.get('given_name'),
+            last_name=user_info.get('family_name'),
+            profile_image_url=user_info.get('picture')
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    login_user(user)
+    return redirect(url_for('index'))
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.route('/static/<path:filename>')
