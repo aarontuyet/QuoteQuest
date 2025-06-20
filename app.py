@@ -36,10 +36,8 @@ with app.app_context():
     db.create_all()
 
 # Import and register auth blueprint
-from replit_auth import make_replit_blueprint
 from routes import *  # Import all routes
 
-app.register_blueprint(make_replit_blueprint(), url_prefix="/auth")
 
 # Make session permanent
 @app.before_request
