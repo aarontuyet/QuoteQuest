@@ -1,0 +1,142 @@
+/* Custom styles for the quote display application */
+
+body {
+    min-height: 100vh;
+}
+
+.quote-card {
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.quote-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blockquote {
+    font-size: 1.25rem;
+    line-height: 1.6;
+}
+
+.blockquote p {
+    font-style: italic;
+    position: relative;
+}
+
+.blockquote p::before {
+    content: '"';
+    font-size: 3rem;
+    position: absolute;
+    left: -2rem;
+    top: -1rem;
+    opacity: 0.3;
+}
+
+.blockquote p::after {
+    content: '"';
+    font-size: 3rem;
+    position: absolute;
+    right: -2rem;
+    bottom: -2rem;
+    opacity: 0.3;
+}
+
+.quote-transition {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.quote-transition.show {
+    opacity: 1;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .blockquote {
+        font-size: 1.1rem;
+    }
+    
+    .blockquote p::before,
+    .blockquote p::after {
+        font-size: 2rem;
+    }
+    
+    .blockquote p::before {
+        left: -1rem;
+        top: -0.5rem;
+    }
+    
+    .blockquote p::after {
+        right: -1rem;
+        bottom: -1rem;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        border-radius: 0.375rem !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-group .btn:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Loading animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Badge styling */
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Filter card styling */
+.card-header {
+    background: var(--bs-secondary-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+/* Custom focus states for better accessibility */
+.btn:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Improve readability of quote text */
+#quote-text {
+    max-width: 800px;
+    margin: 0 auto;
+    word-wrap: break-word;
+}
+
+/* Error state styling */
+.alert {
+    border: none;
+    border-radius: 0.5rem;
+}
+
+/* Empty state styling */
+#empty-state .fa-search {
+    opacity: 0.5;
+}
