@@ -37,6 +37,8 @@ class QuoteApp {
             copyQuote: document.getElementById('copy-quote'),
             favoriteQuote: document.getElementById('favorite-quote'),
             searchQuote: document.getElementById('search-quote'),
+            searchAuthorAbout: document.getElementById('search-author-about'),
+            searchAuthorWorks: document.getElementById('search-author-works'),
             showFavorites: document.getElementById('show-favorites'),
             clearFavoritesFilter: document.getElementById('clear-favorites-filter'),
             favoritesCount: document.getElementById('favorites-count'),
@@ -127,6 +129,8 @@ class QuoteApp {
         if (this.elements.themeToggle) this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
         if (this.elements.loginBtn) this.elements.loginBtn.addEventListener('click', () => this.login());
         if (this.elements.logoutBtn) this.elements.logoutBtn.addEventListener('click', () => this.logout());
+        if (this.elements.searchAuthorAbout) this.elements.searchAuthorAbout.addEventListener('click', () => this.searchAuthorAbout());
+        if (this.elements.searchAuthorWorks) this.elements.searchAuthorWorks.addEventListener('click', () => this.searchAuthorWorks());
         
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
@@ -526,6 +530,26 @@ applyFilters() {
         
         window.open(googleUrl, '_blank');
     }
+
+        searchAuthorAbout() {
+            if (this.filteredQuotes.length === 0) return;
+            const quote = this.filteredQuotes[this.currentIndex];
+            const searchQuery = `About ${quote.author}`;
+            const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            window.open(googleUrl, '_blank');
+    }
+        
+        /**
+         * Search Google for "[Author] list of works"
+         */
+        searchAuthorWorks() {
+            if (this.filteredQuotes.length === 0) return;
+            const quote = this.filteredQuotes[this.currentIndex];
+            const searchQuery = `${quote.author} list of works`;
+            const googleUrl = `https://www.google.com/search?q=${encodeURIComponent(searchQuery)}`;
+            window.open(googleUrl, '_blank');
+    }
+
     
     /**
      * Toggle favorites view
