@@ -127,6 +127,19 @@ body::before {
 }
 
 /* Quote Text */
+
+#quote-source {
+    color: white;
+    font-size: 1.15rem; /* Slightly bigger than default */
+    font-weight: 500;
+}
+
+#quote-year {
+    color: white;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
 .blockquote {
     font-family: 'Inter', sans-serif;
     font-size: 1.4rem;
@@ -615,10 +628,20 @@ body.light-mode .blockquote {
     text-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
+body.light-mode #quote-source {
+    color: var(--neon-magenta);
+    font-size: 1.15rem;
+}
+
 body.light-mode .blockquote p::before,
 body.light-mode .blockquote p::after {
     color: var(--neon-magenta);
     text-shadow: 0 0 10px var(--neon-magenta);
+}
+
+body.light-mode #quote-year {
+    color: var(--neon-pink);
+    font-size: 1.05rem;
 }
 
 body.light-mode .blockquote-footer {
