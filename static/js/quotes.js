@@ -154,53 +154,78 @@ class QuoteApp {
     /**
      * Setup filter dropdowns with unique values
      */
-    setupFilters() {
-        // Get unique topics and authors
-        const topicSet = new Set();
-                this.quotes.forEach(q => {
-                if (q.Topic) topicSet.add(q.Topic.trim());
-                if (q["Sub-topic"]) topicSet.add(q["Sub-topic"].trim());
-                });
-            const topics = Array.from(topicSet).sort();
+ setupFilters() {
+    const topicCountMap = new Map();
+    const authorSet = new Set();
 
-        
-        const authors = [...new Set(this.quotes.map(quote => quote.author))].sort();
-        
-        // Populate topic filter
-        this.elements.topicFilter.innerHTML = '<option value="">All Topics</option>';
-        topics.forEach(topic => {
-            const option = document.createElement('option');
-            option.value = topic;
-            option.textContent = topic;
-            this.elements.topicFilter.appendChild(option);
-        });
-        
-        // Populate author filter
-        this.elements.authorFilter.innerHTML = '<option value="">All Authors</option>';
-        authors.forEach(author => {
-            const option = document.createElement('option');
-            option.value = author;
-            option.textContent = author;
-            this.elements.authorFilter.appendChild(option);
-        });
-    }
+    this.quotes.forEach(q => {
+        const topic = q.topic?.trim();
+        const subtopic = q.subtopic?.trim();
+
+        // Count topic
+        if (topic) {
+            topicCountMap.set(topic, (topicCountMap.get(topic) || 0) + 1);
+        }
+
+        // Count subtopic separately (if different from topic)
+        if (subtopic && subtopic !== topic) {
+            topicCountMap.set(subtopic, (topicCountMap.get(subtopic) || 0) + 1);
+        }
+
+        // Collect author
+        if (q.author) {
+            authorSet.add(q.author);
+        }
+    });
+
+    // Sort topics alphabetically
+    const sortedTopics = Array.from(topicCountMap.keys()).sort();
+
+    // Populate topic filter with counts
+    this.elements.topicFilter.innerHTML = '<option value="">All Topics</option>';
+    sortedTopics.forEach(topic => {
+        const count = topicCountMap.get(topic);
+        const option = document.createElement('option');
+        option.value = topic;
+        option.textContent = `${topic} (${count})`;
+        this.elements.topicFilter.appendChild(option);
+    });
+
+    // Populate author filter
+    const sortedAuthors = Array.from(authorSet).sort();
+    this.elements.authorFilter.innerHTML = '<option value="">All Authors</option>';
+    sortedAuthors.forEach(author => {
+        const option = document.createElement('option');
+        option.value = author;
+        option.textContent = author;
+        this.elements.authorFilter.appendChild(option);
+    });
+}
     
     /**
      * Apply current filters to the quotes
      */
-    applyFilters() {
-        const selectedTopic = this.elements.topicFilter.value;
-        const selectedAuthor = this.elements.authorFilter.value;
-        
-        let quotesToFilter = this.showingFavorites ? 
-            this.quotes.filter(quote => this.favorites.includes(this.getQuoteId(quote))) : 
-            this.quotes;
-        
-        this.filteredQuotes = quotesToFilter.filter(quote => {
-            const topicMatch = !selectedTopic || quote.topic === selectedTopic;
-            const authorMatch = !selectedAuthor || quote.author === selectedAuthor;
-            return topicMatch && authorMatch;
-        });
+applyFilters() {
+    const selectedTopic = this.elements.topicFilter.value;
+    const selectedAuthor = this.elements.authorFilter.value;
+
+    let quotesToFilter = this.showingFavorites
+        ? this.quotes.filter(quote => this.favorites.includes(this.getQuoteId(quote)))
+        : this.quotes;
+
+    this.filteredQuotes = quotesToFilter.filter(quote => {
+        const topicMatch =
+            !selectedTopic ||
+            quote.topic?.trim() === selectedTopic ||
+            quote.subtopic?.trim() === selectedTopic;
+
+        const authorMatch = !selectedAuthor || quote.author === selectedAuthor;
+
+        return topicMatch && authorMatch;
+    });
+
+    this.displayQuotes();
+}
         
         // Reset current index
         this.currentIndex = 0;
