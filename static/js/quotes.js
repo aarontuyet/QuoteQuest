@@ -223,12 +223,12 @@ applyFilters() {
 
         return topicMatch && authorMatch;
     });
-
+    // Reset current index
+    this.currentIndex = 0;
     this.displayQuotes();
 }
         
-        // Reset current index
-        this.currentIndex = 0;
+
         
         // Update display
         if (this.filteredQuotes.length === 0) {
