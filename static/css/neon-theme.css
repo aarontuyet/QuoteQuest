@@ -737,3 +737,16 @@ body.light-mode #theme-toggle:hover {
     color: white;
     box-shadow: 0 0 20px var(--neon-cyan);
 }
+
+#quote-year,
+#quote-source {
+  color: white !important;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+/* Light mode override */
+body.light-mode #quote-year,
+body.light-mode #quote-source {
+  color: orange !important;
+}
