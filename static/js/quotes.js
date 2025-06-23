@@ -156,7 +156,14 @@ class QuoteApp {
      */
     setupFilters() {
         // Get unique topics and authors
-        const topics = [...new Set(this.quotes.map(quote => quote.topic))].sort();
+        const topicSet = new Set();
+                this.quotes.forEach(q => {
+                if (q.Topic) topicSet.add(q.Topic.trim());
+                if (q["Sub-topic"]) topicSet.add(q["Sub-topic"].trim());
+                });
+            const topics = Array.from(topicSet).sort();
+
+        
         const authors = [...new Set(this.quotes.map(quote => quote.author))].sort();
         
         // Populate topic filter
