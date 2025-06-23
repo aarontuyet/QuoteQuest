@@ -1,0 +1,89 @@
+✅ 1. Update Topic/Subtopic Filter to Include Both Columns
+Where: static/js/quotes.js (where topics are extracted and filters are populated)
+
+What:
+
+Modify the logic that builds the topics array to include both Topic and Sub-topic fields.
+
+Deduplicate and sort the combined list before populating the dropdown.
+
+✅ 2. Add Count Next to Each Topic/Subtopic in Filter
+Where: static/js/quotes.js (same section as above)
+
+What:
+
+Count how many quotes exist for each topic/subtopic.
+
+Append (${count}) to each option in the dropdown.
+
+🔼 3. Move Up "Random Quote" Button
+Where: templates/index.html
+
+What:
+
+Move the Random Quote button’s <div> above the filters <div> in the layout.
+
+🔽 4. Move Down Filters Box
+Where: templates/index.html
+
+What:
+
+Move the filters block (topic/author selectors) below the quote display or wherever you feel is more appropriate visually.
+
+🔍 5a. Add “About Author” Search Button
+Where: templates/index.html, static/js/quotes.js
+
+What:
+
+Add new button next to the quote’s author display.
+
+JavaScript: on click, trigger window.open() with a URL like https://www.google.com/search?q=about [author name].
+
+📚 5b. Add “Author’s Works” Button
+Where: Same as 5a
+
+What:
+
+New button, slightly different label.
+
+JavaScript: trigger window.open() with https://www.google.com/search?q=[author name] list of works.
+
+🎨 6. Fix Text Colors for Light Theme
+Where: static/css/styles.css
+
+What:
+
+Audit classes for text elements not adjusting for light theme.
+
+Add @media (prefers-color-scheme: light) overrides if needed.
+
+🌙 7. Fix Text Colors for Dark Theme
+Where: static/css/styles.css
+
+What:
+
+Similar audit as above, but with dark theme in mind.
+
+Ensure contrast and readability by overriding with @media (prefers-color-scheme: dark) styles.
+
+🔒 8. Fix/Enable OAuth and Favorites
+Where:
+
+Python: routes.py, app.py, models.py
+
+JS: quotes.js (for conditional display)
+
+What:
+
+Finish setup of Google OAuth via Authlib.
+
+Ensure UserFavorite queries and UI updates are working once user is authenticated.
+
+➕ 9. Add “Submit a Quote” Feature
+Where: templates/index.html, routes.py
+
+What:
+
+Add form for users to submit new quotes.
+
+Create new API endpoint that appends to the quote dataset or temporarily stores new entries (e.g. DB table or spreadsheet backend).
