@@ -225,7 +225,7 @@ applyFilters() {
     });
     // Reset current index
     this.currentIndex = 0;
-    this.displayQuotes();
+    //this.displayQuotes();
         
         // Update display
         if (this.filteredQuotes.length === 0) {
