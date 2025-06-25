@@ -100,10 +100,13 @@ class QuoteApp {
             console.log(`Loaded ${this.quotes.length} quotes successfully`);
             
         } catch (error) {
-            console.error('Error loading quotes:', error);
-            throw new Error('Unable to load quotes. Please check your internet connection and try again.');
+              console.error('Error loading quotes, retrying in 4s...', error);
+                // Keep showing the loading spinner and retry after 4 seconds
+                setTimeout(() => this.loadQuotes(), 4000);
         }
     }
+
+    
     
     /**
      * Setup event listeners for navigation and filtering
